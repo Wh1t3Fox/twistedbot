@@ -61,6 +61,15 @@ class MyBot(irc.IRCClient):
             msg = "I'm a work in progress"
             self.msg(channel, msg)
 
+        if msg.startswith('!isup'):
+            try:
+                command, site = msg.split(' ', 2)
+                msg = isup.ISUP(site).status
+            except:
+                msg = "Your formatting is incorrect"
+
+            self.msg(channel, msg)
+
         if msg.startswith('!fortune'):
             msg = fortune.Fortune().msg
             self.msg(channel, msg)
