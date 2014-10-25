@@ -61,6 +61,15 @@ class MyBot(irc.IRCClient):
             msg = "I'm a work in progress"
             self.msg(channel, msg)
 
+        if msg.startswith('!fortune'):
+            msg = fortune.Fortune().msg
+            self.msg(channel, msg)
+
+        if msg.startswith('!hash'):
+            command, alg, message = msg.split(' ', 2)
+            h = hashes.Hash(alg, message)
+            self.msg(channel, h.result)
+
         #look for youtube link
         if msg.find("youtube.com/watch?v=") != -1:
             pos = msg.find('youtube')+20
