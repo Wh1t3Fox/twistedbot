@@ -32,6 +32,7 @@ class MyBot(irc.IRCClient):
 
     #receive message
     def privmsg(self, user, channel, msg):
+        logging.info(msg)
         user = user.split('!', 1)[0]
 
         if msg.startswith('!isup'):
