@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import re
 import requests
 import urllib
 from bs4 import BeautifulSoup
@@ -11,7 +12,6 @@ class Webpage(object):
 
     def get_info(self, url):
         resp = urllib.urlopen(url)
-        url = resp.url
-        r = requests.get(url)
+        r = requests.get(resp.url)
         soup = BeautifulSoup(r.text)
-        self.title = str(soup.title.string)
+        self.title = re.sub(r'\r|\n','',str(soup.title.string))
