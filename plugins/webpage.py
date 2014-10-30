@@ -13,7 +13,7 @@ class Webpage(object):
         return re.sub(r'[\r|\n|\s]*','',text)
 
     def sanitize_text(self, text):
-        return re.sub(r'[\r|\n]*','',text)
+        return re.sub(r'[\r|\n]*','',text).strip()
 
     def get_info(self, url):
         r = requests.get(self.sanitize_url(url))
