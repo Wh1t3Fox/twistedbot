@@ -61,6 +61,13 @@ class MyBot(irc.IRCClient):
             self.msg(channel, info.author)
             self.msg(channel, info.description)
 
+        #get the url and lets print the title of the page
+        elif msg.find('http') != -1:
+            url = msg[msg.find('http'):msg.find(' ')]
+            info = webpage.Webpage(url)
+            self.msg(channel, info.title)
+
+
         #Not a command so build corpus or talk
         else:
             msg = ' '.join(msg.split()[1:])
