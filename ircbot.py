@@ -66,7 +66,7 @@ class MyBot(irc.IRCClient):
         elif msg.find('http') != -1:
             if msg.find(' ') != -1:
                 text = msg[msg.find('http'):]
-                url = msg[text.find('http'):text.find(' ')]
+                url = text[text.find('http'):text.find(' ')]
             else:
                 url = msg[msg.find('http'):]
             info = webpage.Webpage(url)
