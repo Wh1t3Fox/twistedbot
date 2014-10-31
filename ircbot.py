@@ -65,7 +65,8 @@ class MyBot(irc.IRCClient):
         #get the url and lets print the title of the page
         elif msg.find('http') != -1:
             if msg.find(' ') != -1:
-                url = msg[msg.find('http'):msg.find(' ')]
+                text = msg[msg.find('http')):]
+                url = msg[text.find('http'):text.find(' ')]
             else:
                 url = msg[msg.find('http'):]
             info = webpage.Webpage(url)
