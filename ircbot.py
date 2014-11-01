@@ -20,6 +20,12 @@ class MyBot(irc.IRCClient):
         return self.factory.nickname
     nickname = property(_get_nickname)
 
+    def connectionMade(self):
+        irc.IRCClient.connectionMade(self)
+
+    def connectionLost(self, reason):
+        irc.IRCClient.connectionLost(self, reason)
+
     #signed on to network
     def signedOn(self):
         logging.info("[+] Signed on to network")
@@ -30,7 +36,7 @@ class MyBot(irc.IRCClient):
     #joined a channel
     def joined(self, channel):
         logging.info("[+] Joined %s" % channel)
-        #threads.deferToThread(tweets.get_tweets, self)
+        reactor.callInThread(tweets.get_tweets, self)
 
     #receive message
     def privmsg(self, user, channel, msg):
@@ -65,7 +71,7 @@ class MyBot(irc.IRCClient):
             self.msg(channel, info.description)
 
         #get the url and lets print the title of the page
-        elif msg.find('http') != -1:
+        elif msg.find('http') != -1 and user != self.nickname:
             if msg.find(' ') != -1:
                 text = msg[msg.find('http'):]
                 url = text[text.find('http'):text.find(' ')]
