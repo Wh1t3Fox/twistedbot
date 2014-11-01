@@ -11,5 +11,3 @@ Features
 * Get Youtube video information
 * Get webpage title
 * Check if a website is up or down
-* Talking (Credit goes to Eric Florenzano for the Markov chain features)
-
