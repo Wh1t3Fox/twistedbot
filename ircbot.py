@@ -109,11 +109,6 @@ if __name__ == "__main__":
     parser = SafeConfigParser()
     parser.read('config.ini')
 
-    if os.path.exists('corpus.txt'):
-        with open('corpus.txt', 'r') as fr:
-            for line in fr:
-                speak.add_to_brain(line, 3)
-
     f = MyBotFactory(parser.get('irc', 'channel'), parser.get('irc', 'nickname'))
     reactor.connectTCP(parser.get('irc', 'server'), int(parser.get('irc', 'port')), f)
     reactor.run()
