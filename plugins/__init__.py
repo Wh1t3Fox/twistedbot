@@ -1,6 +1,3 @@
 import os
-for module in os.listdir(os.path.dirname(__file__)):
-    if module == '__int__.py' or module[-3:] != '.py':
-        continue
-    __import__(module[:-3], locals(), globals())
-del module
+dirlist = os.listdir(os.path.dirname(__file__))
+__all__ = [x[:-3] for x in dirlist if x.endswith('.py') and x != '__init__.py']

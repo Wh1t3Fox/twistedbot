@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 
+
+
 from twisted.words.protocols import irc
-from twisted.internet import protocol, reactor
-
-
+from twisted.internet import protocol, reactor, threads
+from ConfigParser import SafeConfigParser
 from datetime import datetime
 from random import random
 import logging
@@ -29,6 +30,7 @@ class MyBot(irc.IRCClient):
     #joined a channel
     def joined(self, channel):
         logging.info("[+] Joined %s" % channel)
+        #threads.deferToThread(tweets.get_tweets, self)
 
     #receive message
     def privmsg(self, user, channel, msg):
@@ -73,20 +75,8 @@ class MyBot(irc.IRCClient):
             self.msg(channel, info.title)
 
 
-        #Not a command so build corpus or talk
-        else:
-            msg = ' '.join(msg.split()[1:])
-            speak.add_to_brain(msg, self.factory.chain_length, write_to_file=True)
-            if random() <= self.factory.chattiness:
-                sentence = speak.generate_sentence(msg, self.factory.chain_length,self.factory.max_words)
-                #private message
-                if channel == self.nickname and sentence:
-                    self.msg(user, sentence)
-                    return
-
-                #channel message to me
-                if msg.startswith(self.nickname) and sentence:
-                    self.msg(channel, sentence)
+    def threadSafeMsg(self, channel, message):
+        reactor.callFromThread(self.msg, channel, message)
 
 #Interfaces the bot with Twisted
 class MyBotFactory(protocol.ClientFactory):
@@ -116,11 +106,14 @@ class MyBotFactory(protocol.ClientFactory):
 if __name__ == "__main__":
     logging.basicConfig(format='%(levelname)s:%(asctime)s:%(message)s', filename='ircbot.log',level=logging.INFO)
 
+    parser = SafeConfigParser()
+    parser.read('config.ini')
+
     if os.path.exists('corpus.txt'):
         with open('corpus.txt', 'r') as fr:
             for line in fr:
                 speak.add_to_brain(line, 3)
 
-    f = MyBotFactory("b01lers", "BotMaster")
-    reactor.connectTCP("irc.freenode.net", 6667, f)
+    f = MyBotFactory(parser.get('irc', 'channel'), parser.get('irc', 'nickname'))
+    reactor.connectTCP(parser.get('irc', 'server'), int(parser.get('irc', 'port')), f)
     reactor.run()
