@@ -11,3 +11,4 @@ Features
 * Get Youtube video information
 * Get webpage title
 * Check if a website is up or down
+* Send IRC Channel my tweets
